@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Declaração para Manoela</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Configuração básica */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #000;
+            font-family: 'Dancing Script', cursive;
+            color: #FFD700;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+            transition: background-color 0.5s;
+        }
+        /* Título */
+        h1 {
+            font-size: 2.5em;
+            margin-top: 20px;
+        }
+        /* Mensagem fixa */
+        .message-box {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            color: #000;
+            border: 4px solid #FFD700;
+            font-size: 1.2em;
+            text-align: center;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            transition: background-color 0.5s, color 0.5s;
+        }
+        /* Botões laterais */
+        .side-button {
+            position: fixed;
+            top: 50%;
+            padding: 10px 15px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #b35454;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            transform: translateY(-50%);
+        }
+        .side-button:hover {
+            background-color: #a44a4a;
+        }
+        .left-button { left: 10px; }
+        .right-button { right: 10px; }
+        /* Modelo original de coração */
+        .heart {
+            position: fixed;
+            width: 50px; /* Tamanho aumentado para os corações principais */
+            height: 50px;
+            background-color: red;
+            clip-path: polygon(50% 0%, 61% 12%, 73% 9%, 84% 22%, 100% 39%, 89% 54%, 75% 66%, 50% 100%, 25% 66%, 11% 54%, 0% 39%, 16% 22%, 27% 9%, 39% 12%);
+            animation: pulse 1s infinite;
+            transition: width 0.3s, height 0.3s;
+        }
+        .heart.top-left { top: 10px; left: 10px; }
+        .heart.top-right { top: 10px; right: 10px; }
+        .heart.bottom-left { bottom: 10px; left: 10px; }
+        .heart.bottom-right { bottom: 10px; right: 10px; }
+        /* Estilo dos corações menores (aumento para 40px) */
+        .mini-heart {
+            position: absolute;
+            width: 40px; /* Tamanho aumentado para os mini corações */
+            height: 40px;
+            background-color: red;
+            clip-path: polygon(50% 0%, 61% 12%, 73% 9%, 84% 22%, 100% 39%, 89% 54%, 75% 66%, 50% 100%, 25% 66%, 11% 54%, 0% 39%, 16% 22%, 27% 9%, 39% 12%);
+            opacity: 0;
+            animation: scatter 1s forwards;
+        }
+        /* Animação de pulsação */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        /* Animação de espalhamento (com mais alcance para os corações maiores) */
+        @keyframes scatter {
+            from { opacity: 1; transform: scale(1) translate(0, 0); }
+            to { opacity: 0; transform: scale(0.5) translate(var(--x), var(--y)); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Para a Manoela, a pessoa que tanto gosto</h1>
+        <div class="message-box" id="messageBox">
+            Esse ano foi incrível para mim, logo no começo tive o prazer de conhecer uma pessoa maravilhosa como você, de passar muito tempo com você e ter a satisfação de compartilhar memórias com você. Quando você começou a trabalhar em período maior e ao mesmo tempo fazer o cursinho, eu já imaginava que conversaríamos menos, por conhecer o quão dedicada você é, e mesmo sabendo disso, eu tive/tenho o maior prazer de aguardar por alguém como você, que é uma em 8 bilhões. Eu imagino tudo que esteja passando, e já passei por situações parecidas, então acredite quando digo que tudo já deve passar e poderemos continuar juntos. Amo você e tenha um feliz aniversário
+        </div>
+    </div>
+
+    <!-- Botões laterais -->
+    <button class="side-button left-button" onclick="toggleTheme()">Mudar Tema</button>
+    <button class="side-button right-button" onclick="growHearts()">Aumentar Corações</button>
+
+    <!-- Corações nos cantos -->
+    <div class="heart top-left" id="heart1"></div>
+    <div class="heart top-right" id="heart2"></div>
+    <div class="heart bottom-left" id="heart3"></div>
+    <div class="heart bottom-right" id="heart4"></div>
+
+    <script>
+        // Alterna entre tema preto/dourado e branco/vermelho
+        function toggleTheme() {
+            const body = document.body;
+            const messageBox = document.getElementById("messageBox");
+
+            if (body.style.backgroundColor === "black") {
+                body.style.backgroundColor = "white";
+                body.style.color = "#b35454";
+                messageBox.style.backgroundColor = "black";
+                messageBox.style.color = "#FFD700";
+                messageBox.style.borderColor = "#b35454";
+            } else {
+                body.style.backgroundColor = "black";
+                body.style.color = "#FFD700";
+                messageBox.style.backgroundColor = "white";
+                messageBox.style.color = "#000";
+                messageBox.style.borderColor = "#FFD700";
+            }
+        }
+
+        // Controla o tamanho e explosão dos corações
+        let heartSize = 50; // Tamanho inicial dos corações principais
+        let clickCount = 0; // Contador de cliques
+        function growHearts() {
+            const hearts = document.querySelectorAll(".heart");
+
+            clickCount++;
+            if (clickCount <= 2) {
+                // Aumenta o tamanho dos corações até o segundo clique
+                heartSize += 50;
+                hearts.forEach(heart => {
+                    heart.style.width = heartSize + "px";
+                    heart.style.height = heartSize + "px";
+                });
+            } else {
+                explodeHearts(); // Explode e reinicia os corações após 2 cliques
+            }
+        }
+
+        // Função para explosão dos corações em corações maiores
+        function explodeHearts() {
+            const hearts = document.querySelectorAll(".heart");
+
+            hearts.forEach(heart => {
+                for (let i = 0; i < 40; i++) { // Gera 40 mini corações por coração
+                    const miniHeart = document.createElement("div");
+                    miniHeart.classList.add("mini-heart");
+                    miniHeart.style.left = `${heart.offsetLeft + heartSize / 2}px`;
+                    miniHeart.style.top = `${heart.offsetTop + heartSize / 2}px`;
+                    // Define uma direção aleatória para cada mini coração
+                    miniHeart.style.setProperty("--x", `${Math.random() * 400 - 200}px`);
+                    miniHeart.style.setProperty("--y", `${Math.random() * 400 - 200}px`);
+                    document.body.appendChild(miniHeart);
+                    // Remove os mini corações após a animação
+                    setTimeout(() => miniHeart.remove(), 1000);
+                }
+            });
+
+            // Reinicia o tamanho dos corações originais após a explosão
+            heartSize = 50; // Volta ao tamanho inicial dos corações principais
+            clickCount = 0; // Reseta o contador de cliques
+            hearts.forEach(heart => {
+                heart.style.width = `${heartSize}px`;
+                heart.style.height = `${heartSize}px`;
+            });
+        }
+    </script>
+</body>
+</html>
